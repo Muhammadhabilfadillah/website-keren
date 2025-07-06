@@ -1,1 +1,248 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Color & Calculator</title>
+    <style>
+      :root {
+        --primary: #1a1a1a;
+        --secondary: #2e2e2e;
+        --accent: #8b0000;
+        --success: #14532d;
+        --info: #0f4c75;
+        --warning: #a65e00;
+        --white: #dcdcdc;
+        --glass: rgba(30, 30, 30, 0.2);
+        --glass-border: rgba(100, 100, 100, 0.3);
+        --input-bg: rgba(40, 40, 40, 0.95);
+        --shadow: rgba(0, 0, 0, 0.7);
+      }
 
+      body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--secondary) 100%
+        );
+        min-height: 100vh;
+        padding: 20px;
+        color: var(--white);
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 30px;
+        text-shadow: 2px 2px 4px var(--shadow);
+      }
+
+      .apps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+      }
+
+      .card {
+        background: var(--glass);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 25px;
+        border: 1px solid var(--glass-border);
+      }
+
+      .color-box {
+        width: 100px;
+        height: 100px;
+        border-radius: 10px;
+        margin: 0 auto 15px;
+        border: 2px solid var(--glass-border);
+        transition: all 0.3s ease;
+      }
+
+      .color-box:hover {
+        transform: scale(1.1);
+      }
+
+      .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        margin: 5px;
+        transition: all 0.3s ease;
+        color: white;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px var(--shadow);
+      }
+
+      .btn-primary {
+        background: var(--accent);
+      }
+      .btn-add {
+        background: var(--success);
+      }
+      .btn-subtract {
+        background: var(--accent);
+      }
+      .btn-multiply {
+        background: var(--info);
+      }
+      .btn-divide {
+        background: var(--warning);
+      }
+
+      .input-field {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        margin: 5px 0;
+        background: var(--input-bg);
+        color: #333;
+      }
+
+      .result {
+        background: var(--glass);
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 15px;
+        font-size: 1.2rem;
+        min-height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .calc-buttons {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin: 15px 0;
+      }
+
+      @media (max-width: 600px) {
+        .apps {
+          grid-template-columns: 1fr;
+        }
+        .calc-buttons {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🎨 Color & Calculator</h1>
+
+      <div class="apps">
+        <!-- Color Changer -->
+        <div class="card">
+          <h2>Color Changer</h2>
+          <div class="color-box" id="colorBox"></div>
+          <div id="colorInfo">Klik untuk ubah warna</div>
+          <button class="btn btn-primary" onclick="changeColor()">
+            Generate Color
+          </button>
+        </div>
+
+        <!-- Calculator -->
+        <div class="card">
+          <h2>Calculator</h2>
+          <input
+            type="number"
+            class="input-field"
+            id="num1"
+            placeholder="Angka pertama"
+          />
+          <input
+            type="number"
+            class="input-field"
+            id="num2"
+            placeholder="Angka kedua"
+          />
+          <div class="calc-buttons">
+            <button class="btn btn-add" onclick="calculate('+')">+</button>
+            <button class="btn btn-subtract" onclick="calculate('-')">−</button>
+            <button class="btn btn-multiply" onclick="calculate('*')">×</button>
+            <button class="btn btn-divide" onclick="calculate('/')">÷</button>
+          </div>
+          <div class="result" id="calcResult">
+            Masukkan angka dan pilih operasi
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const colors = [
+        { hex: "#ff6b6b", name: "Coral Red" },
+        { hex: "#4ecdc4", name: "Turquoise" },
+        { hex: "#45b7d1", name: "Sky Blue" },
+        { hex: "#f9ca24", name: "Golden Yellow" },
+        { hex: "#f0932b", name: "Orange" },
+        { hex: "#6c5ce7", name: "Purple" },
+        { hex: "#fd79a8", name: "Pink" },
+        { hex: "#00b894", name: "Mint Green" },
+      ];
+
+      function changeColor() {
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        document.getElementById("colorBox").style.backgroundColor = color.hex;
+        document.getElementById(
+          "colorInfo"
+        ).innerHTML = `${color.name}<br>${color.hex}`;
+      }
+
+      function calculate(op) {
+        const num1 = parseFloat(document.getElementById("num1").value);
+        const num2 = parseFloat(document.getElementById("num2").value);
+        const result = document.getElementById("calcResult");
+
+        if (isNaN(num1) || isNaN(num2)) {
+          result.innerHTML = "⚠️ Masukkan angka yang valid!";
+          return;
+        }
+
+        let res;
+        switch (op) {
+          case "+":
+            res = num1 + num2;
+            break;
+          case "-":
+            res = num1 - num2;
+            break;
+          case "*":
+            res = num1 * num2;
+            break;
+          case "/":
+            if (num2 === 0) {
+              result.innerHTML = "❌ Tidak bisa bagi nol!";
+              return;
+            }
+            res = num1 / num2;
+            break;
+        }
+
+        result.innerHTML = `${num1} ${op} ${num2} = <strong>${res.toFixed(
+          2
+        )}</strong>`;
+      }
+
+      // Initialize
+      changeColor();
+    </script>
+  </body>
+</html>
